@@ -12,8 +12,10 @@
 </script>
 
 <template>
-  <RouterLink to="/">Cadastro</RouterLink>
-  <RouterLink to="/products">Listagem</RouterLink>
+  <nav class="navigation">
+    <RouterLink to="/">Cadastro</RouterLink>
+    <RouterLink to="/products">Listagem</RouterLink>
+  </nav>
   <RouterView />
 </template>
 
