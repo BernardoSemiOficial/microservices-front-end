@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import axios from "axios";
+import api from "../services/api";
 
 export default defineComponent({
   name: "ListProducts",
@@ -13,9 +13,16 @@ export default defineComponent({
     this.getProducts();
   },
   methods: {
+    formatCoin(value: any) {
+      var formatter = new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      });
+      return formatter.format(value);
+    },
     getProducts() {
-      axios
-        .get("http://localhost:3000/products")
+      api
+        .get("/products")
         .then((res) => {
           this.products = res.data;
         })
@@ -28,27 +35,44 @@ export default defineComponent({
 </script>
 
 <template>
-  <section class="form">
+  <section class="container">
     <h1>Lista de produtos</h1>
-  </section>
 
-  <table class="styled-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Points</th>
-      </tr>
-    </thead>
-    <tbody v-for="product in products">
-      <tr>
-        <td>{{ product.title }}</td>
-        <td>{{ product.price }}</td>
-      </tr>
-    </tbody>
-  </table>
+    <table class="styled-table" v-if="products.length > 0">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Descrição</th>
+          <th>Preço</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody v-for="product in products">
+        <tr>
+          <td>{{ product.title }}</td>
+          <td>{{ product.description }}</td>
+          <td>{{ formatCoin(product.price) }}</td>
+          <td>{{ product.active ? "ativo" : "desativado" }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div v-else>
+      <p>A lista de produtos está vazia!</p>
+    </div>
+  </section>
 </template>
 
 <style scoped>
+.container h1,
+p {
+  text-align: center;
+  margin: 50px 30px;
+}
+
+p {
+  font-size: 18px;
+  color: #009879;
+}
 .styled-table {
   border-collapse: collapse;
   margin: 25px 0;
